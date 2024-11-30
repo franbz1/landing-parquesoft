@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindMatch AI - Selección de personal eficiente y amigable para PYMEs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff5eb;
+        }
+        header {
+            background-color: #ffffff;
+            color: #333;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        nav ul li {
+            margin-left: 2rem;
+        }
+        nav a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #f3851e;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        .hero {
+            background: linear-gradient(135deg, #f3851e, #ffbe76);
+            color: #ffffff;
+            text-align: center;
+            padding: 8rem 0 4rem;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+        }
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #ffffff;
+            color: #f3851e;
+            padding: 0.8rem 2rem;
+            text-decoration: none;
+            border-radius: 30px;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            background-color: #f3851e;
+            color: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+        .features {
+            padding: 6rem 0;
+            background-color: #ffffff;
+        }
+        .features h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #333;
+            font-size: 2.5rem;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        .feature {
+            background-color: #fff5eb;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .feature h3 {
+            margin-bottom: 1rem;
+            color: #f3851e;
+            font-size: 1.5rem;
+        }
+        .impact {
+            padding: 6rem 0;
+            background-color: #fff5eb;
+        }
+        .impact h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #333;
+            font-size: 2.5rem;
+        }
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        .impact-item {
+            text-align: center;
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .impact-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .impact-item img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1rem;
+        }
+        .metrics {
+            padding: 6rem 0;
+            background-color: #ffffff;
+        }
+        .metrics h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #333;
+            font-size: 2.5rem;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+        .metric {
+            overflow: auto;
+            text-align: center;
+            background-color: #fff5eb;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #f3851e;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        .cta {
+            padding: 6rem 0;
+            text-align: center;
+            background: linear-gradient(135deg, #f3851e, #ffbe76);
+            color: #ffffff;
+            clip-path: polygon(0 15%, 100% 0, 100% 100%, 0 100%);
+        }
+        .cta h2 {
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .cta p {
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        footer {
+            background-color: #333;
+            color: #ffffff;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        /* Estilos responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+            .hero {
+                padding: 6rem 0 3rem;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .features h2, .impact h2, .metrics h2, .cta h2 {
+                font-size: 2rem;
+            }
+            .feature-grid, .impact-grid, .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            .chart-container {
+                height: 200px;
+            }
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            nav ul {
+                flex-direction: column;
+                width: 100%;
+                margin-top: 1rem;
+            }
+            nav ul li {
+                margin: 0.5rem 0;
+            }
+            .btn {
+                padding: 0.6rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Menú hamburguesa para móviles */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+        .menu-toggle span {
+            height: 3px;
+            width: 25px;
+            background-color: #333;
+            margin-bottom: 4px;
+            transition: all 0.3s ease;
+        }
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+            nav ul {
+                display: none;
+            }
+            nav ul.show {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <h1 style="color: #f3851e;">MindMatch AI</h1>
+            <div class="menu-toggle" id="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul id="nav-menu">
+                <li><a href="#features">Características</a></li>
+                <li><a href="#impact">Impacto</a></li>
+                <li><a href="#metrics">Métricas</a></li>
+                <li><a href="#cta">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Selección de personal inteligente y empática para PYMEs</h1>
+                <p>Descubre el poder de la IA que entiende las necesidades únicas de tu equipo y tu negocio</p>
+                <a href="#cta" class="btn">Comienza con MindMatch AI</a>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <div class="container">
+                <h2>Características principales</h2>
+                <div class="feature-grid">
+                    <div class="feature">
+                        <h3>Evaluación holística</h3>
+                        <p>Nuestros algoritmos de IA evalúan habilidades técnicas y competencias emocionales con empatía y precisión.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Proceso simplificado</h3>
+                        <p>Optimizamos la contratación para PYMEs, ahorrando tiempo y recursos valiosos en cada paso del proceso.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Inclusión y diversidad</h3>
+                        <p>Promovemos equipos diversos al reducir sesgos inconscientes en la selección de personal.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Interfaz intuitiva</h3>
+                        <p>Nuestra plataforma es fácil de usar, diseñada pensando en la experiencia del usuario y la eficiencia.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="impact" class="impact">
+            <div class="container">
+                <h2>Nuestro impacto positivo</h2>
+                <div class="impact-grid">
+                    <div class="impact-item">
+                        <img src="/placeholder.svg?height=80&width=80" alt="Bienestar laboral">
+                        <h3>Bienestar laboral</h3>
+                        <p>Fomentamos ambientes de trabajo saludables y equipos más cohesionados, mejorando la satisfacción laboral.</p>
+                    </div>
+                    <div class="impact-item">
+                        <img src="/placeholder.svg?height=80&width=80" alt="Crecimiento sostenible">
+                        <h3>Crecimiento sostenible</h3>
+                        <p>Impulsamos el desarrollo de PYMEs con equipos alineados a sus valores y objetivos a largo plazo.</p>
+                    </div>
+                    <div class="impact-item">
+                        <img src="/placeholder.svg?height=80&width=80" alt="Innovación inclusiva">
+                        <h3>Innovación inclusiva</h3>
+                        <p>Democratizamos el acceso a tecnología avanzada de selección de personal para empresas de todos los tamaños.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="metrics" class="metrics">
+            <div class="container">
+                <h2>Nuestro progreso en números</h2>
+                <div class="metrics-grid">
+                    <div class="metric">
+                        <div class="metric-value" id="empresas-satisfechas">0</div>
+                        <p>Empresas satisfechas</p>
+                        <div class="chart-container">
+                            <canvas id="empresasChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value" id="empleados-felices">0</div>
+                        <p>Empleados felices</p>
+                        <div class="chart-container">
+                            <canvas id="empleadosChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value" id="tiempo-ahorrado">0</div>
+                        <p>Horas ahorradas en selección</p>
+                        <div class="chart-container">
+                            <canvas id="tiempoChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value" id="tasa-retencion">0%</div>
+                        <p>Tasa de retención mejorada</p>
+                        <div class="chart-container">
+                            <canvas id="retencionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cta" class="cta">
+            <div class="container">
+                <h2>¿Listo para transformar tu equipo?</h2>
+                <p>Únete a MindMatch AI y descubre el poder de la selección de personal empática e inteligente. Comienza hoy mismo y lleva tu PYME al siguiente nivel.</p>
+                <a href="#" class="btn">Solicita una demostración gratuita</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 MindMatch AI. Creando conexiones significativas en el trabajo.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simulated metrics data
+        const metrics = {
+            empresasSatisfechas: 500,
+            empleadosFelices: 5000,
+            tiempoAhorrado: 10000,
+            tasaRetencion: 95
+        };
+
+        // Function to animate counting up
+        function animateValue(id, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                let value = Math.floor(progress * (end - start) + start);
+                if (id === 'tasa-retencion') {
+                    value = value + '%';
+                } else {
+                    value = value.toLocaleString();
+                }
+                document.getElementById(id).textContent = value;
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Animate metrics when scrolled into view
+        function handleScroll() {
+            const metricsSection = document.getElementById('metrics');
+            const rect = metricsSection.getBoundingClientRect();
+            const isVisible = rect.top < window.innerHeight && rect.bottom >= 0;
+
+            if (isVisible) {
+                animateValue('empresas-satisfechas', 0, metrics.empresasSatisfechas, 2000);
+                animateValue('empleados-felices', 0, metrics.empleadosFelices, 2000);
+                animateValue('tiempo-ahorrado', 0, metrics.tiempoAhorrado, 2000);
+                animateValue('tasa-retencion', 0, metrics.tasaRetencion, 2000);
+                createCharts();
+                window.removeEventListener('scroll', handleScroll);
+            }
+        }
+
+        // Create charts using Chart.js
+        function createCharts() {
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            };
+
+            new Chart(document.getElementById('empresasChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Empresas satisfechas',
+                        data: [100, 200, 300, 400, 450, 500],
+                        borderColor: '#f3851e',
+                        tension: 0.1
+                    }]
+                },
+                options: chartOptions
+            });
+
+            new Chart(document.getElementById('empleadosChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Empleados felices',
+                        data: [1000, 2000, 3000, 3500, 4500, 5000],
+                        backgroundColor: '#ffbe76'
+                    }]
+                },
+                options: chartOptions
+            });
+
+            new Chart(document.getElementById('tiempoChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Horas ahorradas',
+                        data: [2000, 4000, 6000, 7500, 9000, 10000],
+                        borderColor: '#f3851e',
+                        tension: 0.1
+                    }]
+                },
+                options: chartOptions
+            });
+
+            new Chart(document.getElementById('retencionChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Retenidos', 'No retenidos'],
+                    datasets: [{
+                        data: [95, 5],
+                        backgroundColor: ['#f3851e', '#ffbe76']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        // Toggle mobile menu
+        document.getElementById('mobile-menu').addEventListener('click', function() {
+            document.getElementById('nav-menu').classList.toggle('show');
+        });
+
+        window.addEventListener('scroll', handleScroll);
+        handleScroll(); // Check on load in case the section is already visible
+    </script>
+</body>
+</html>
